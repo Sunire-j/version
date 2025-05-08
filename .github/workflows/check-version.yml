@@ -2,8 +2,8 @@ name: Check Chrome Webstore Version
 
 on:
   schedule:
-    - cron: '*/10 * * * *'  # 10분마다 실행
-  workflow_dispatch:        # 수동 실행도 가능
+    - cron: '*/10 * * * *' 
+  workflow_dispatch: 
 
 jobs:
   check:
@@ -12,6 +12,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
 
       - name: Set up Node.js
         uses: actions/setup-node@v3
