@@ -4,7 +4,10 @@ const fs = require('fs');
 const EXTENSION_ID = 'kfmfanlapbdpopjfhoianldpndmadjaf';
 
 async function getWebstoreVersion() {
-  const browser = await puppeteer.launch({ headless: true });
+  const browser = await puppeteer.launch({ 
+    headless: true,
+    args: ['--no-sandbox', '--disable-setuid-sandbox']
+   });
   const page = await browser.newPage();
   
   const url = `https://chrome.google.com/webstore/detail/${EXTENSION_ID}`;
