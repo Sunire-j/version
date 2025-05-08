@@ -1,17 +1,21 @@
-const axios = require('axios');
-const cheerio = require('cheerio');
+const puppeteer = require('puppeteer');
 const fs = require('fs');
 
-const EXTENSION_ID = 'kfmfanlapbdpopjfhoianldpndmadjaf'; // 여기에 자신의 확장 프로그램 ID를 입력하세요.
+const EXTENSION_ID = 'kfmfanlapbdpopjfhoianldpndmadjaf';
 
 async function getWebstoreVersion() {
+  const browser = await puppeteer.launch({ headless: true });
+  const page = await browser.newPage();
+  
   const url = `https://chrome.google.com/webstore/detail/${EXTENSION_ID}`;
-  const res = await axios.get(url);
-  const $ = cheerio.load(res.data);
-  
-  // 버전 정보가 있는 div.N3EXSc 클래스 내의 텍스트를 추출
-  const versionText = $('div.N3EXSc').text().trim();
-  
+  await page.goto(url, { waitUntil: 'domcontentloaded' });
+
+  const versionText = await page.evaluate(() => {
+    const versionElement = document.querySelector('div.N3EXSc');
+    return versionElement ? versionElement.textContent.trim() : null;
+  });
+
+  await browser.close();
   return versionText;
 }
 
